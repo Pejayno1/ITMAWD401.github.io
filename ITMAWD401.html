@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITMAWD401 LOGS 2023-2024</title>
+    <style>
+        :root {
+            --primary: #00ff00;
+            --secondary: #000000;
+            --accent: #003300;
+            --highlight: #005500;
+            --glitch1: #ff00ff;
+            --glitch2: #00ffff;
+            --glitch3: #ffff00;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--secondary);
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-image: 
+                linear-gradient(rgba(0, 80, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 80, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: scanlines 1s linear infinite;
+        }
+        
+        h1 {
+            text-shadow: 0 0 5px var(--primary);
+            border-bottom: 1px dashed var(--primary);
+            padding-bottom: 10px;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 20px; }
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px var(--primary); }
+            100% { text-shadow: 0 0 15px var(--primary), 0 0 20px var(--accent); }
+        }
+        
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .student-button {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .student-button:hover {
+            background-color: var(--primary);
+            color: var(--secondary);
+            box-shadow: 0 0 15px var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .student-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 45%,
+                rgba(0, 255, 0, 0.1) 50%,
+                transparent 55%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: var(--secondary);
+            border: 2px solid var(--primary);
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 0 30px var(--primary);
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: pulseBorder 4s infinite;
+        }
+        
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 10px var(--primary); }
+            50% { box-shadow: 0 0 30px var(--primary); }
+            100% { box-shadow: 0 0 10px var(--primary); }
+        }
+        
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close:hover {
+            transform: rotate(90deg);
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+        }
+        
+        .status-alive {
+            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary);
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dead {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+            animation: shake 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .info-section {
+            margin-top: 15px;
+            border-top: 1px dashed var(--primary);
+            padding-top: 15px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+        
+        .info-section:hover {
+            border-top: 1px solid var(--primary);
+            background-color: rgba(0, 80, 0, 0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        
+        .info-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 3px var(--primary);
+        }
+        
+        .tier-S {
+            color: #ff0000;
+            font-weight: bold;
+            animation: glitch 0.5s infinite;
+        }
+        
+        .tier-A {
+            color: #ff6600;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .tier-B {
+            color: #ffff00;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        .tier-C {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .tier-D {
+            color: #999999;
+            font-weight: bold;
+        }
+        
+        .quote {
+            font-style: italic;
+            padding: 10px;
+            border-left: 3px solid var(--primary);
+            background-color: var(--accent);
+            margin-top: 15px;
+            animation: typewriter 4s steps(40) 1s 1 normal both;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .message {
+            padding: 10px;
+            background-color: var(--highlight);
+            margin-top: 15px;
+            border: 1px dashed var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 0, 0.1),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        
+        @keyframes glitch {
+            0% { 
+                text-shadow: 0 0 5px var(--primary); 
+                transform: translate(0);
+            }
+            20% { 
+                text-shadow: -2px 0 var(--glitch1), 2px 0 var(--glitch2); 
+                transform: translate(-2px, 2px);
+            }
+            40% { 
+                text-shadow: 2px 0 var(--glitch2), -2px 0 var(--glitch3); 
+                transform: translate(2px, -2px);
+            }
+            60% { 
+                text-shadow: -2px 0 var(--glitch3), 2px 0 var(--glitch1); 
+                transform: translate(-2px, 2px);
+            }
+            80% { 
+                text-shadow: 2px 0 var(--glitch1), -2px 0 var(--glitch2); 
+                transform: translate(2px, -2px);
+            }
+            100% { 
+                text-shadow: 0 0 5px var(--primary); 
+                transform: translate(0);
+            }
+        }
+        
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <h1 class="glitch">ITMAWD401 LOGS</h1>
+    <p>Click for INFO</p>
+    
+    <div class="student-grid" id="studentContainer">
+        <!-- Students will be added here by JavaScript -->
+    </div>
+    
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="studentName">LASTNAME_FIRSTNAME</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">STATUS:</span> <span id="studentStatus">Unknown</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Age:</span> <span id="studentAge">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Year Entered:</span> <span id="studentYear">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Class Tier:</span> <span id="studentTier">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status:</span> <span id="studentCivilStatus">-</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-label">Friends:</div>
+                <div id="studentFriends">None listed</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-label">Enemies:</div>
+                <div id="studentEnemies">None listed</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-label">Offenses:</div>
+                <div id="studentOffenses">None recorded</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-label">Achievements:</div>
+                <div id="studentAchievements">None recorded</div>
+            </div>
+            
+            <div class="info-section" id="studentStory">
+                <!-- Future story will go here -->
+            </div>
+            
+            <div class="message" id="studentMessage">
+                <!-- Personal message will go here -->
+            </div>
+            
+            <div class="quote" id="studentQuote">
+                <!-- Quote will go here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample student data with their information
+        const students = [
+    {
+        name: "ABUDA, Clint Marvin",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ALEJANDRE, Rian Ram",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "S",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ALOBA, Gracco",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ALAGAO, Lea",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "APARECE, John Rey",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ARAGON MIRAFLORES, Adrian",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BAUTISTA, Eowyn Jen",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BAUTISTA, Jenn",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BALMES, Manuel T.",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "C",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BANCHIRAN, Maron",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BORJA, Clarence Erin",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "BOTICARIO JR., Roberto",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CABRAL, Charles Andrew",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CABUNOC, Josh",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CALEJA, Euvazgohn",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "C",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CALLAÑO, Ashley Margarette",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CARLOS, Brian Eros",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "CHUA, Zeon",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "DE GUZMAN, James Michael",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "DELOS SANTOS, Kurt Edrian",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "DRG, Des D.",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "C",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ESCAPE, Patrick James",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "FLORES, Clay",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "FRONDARINA, Ivan",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "GOZUN, Jessa",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "GWEN, Edzylle",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "HERVIAS, Gerald",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "LAO, Sean Michael Bryan",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "LEYRAN, Johanes Lawrence Sia",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "LIRAY, Marjun",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "LLAGUNO, Ace Noel",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "MANANQUIL, Edcynuz Bernardino",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "MICLAT, Janrick",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "MONASTERIAL, Lynn",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "MONTEMAYOR, Terence",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ONIO, Joed Khyro",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "PALERMO, Dan Ace",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "PASCUA, Benedict",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "PULUSAN, Tyshan",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "REMOLONA, George",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "S",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "SIA LEYRAN, Johanes Lawrence",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "A",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "TURAY, Danna",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "ZAMORA, Aaron",
+        status: "Alive",
+        age: 18,
+        yearEntered: "G11",
+        classTier: "B",
+        civilStatus: "Single",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    },
+    {
+        name: "Facebook user",
+        status: "Unknown",
+        age: 0,
+        yearEntered: "Unknown",
+        classTier: "Unknown",
+        civilStatus: "Unknown",
+        friends: "",
+        enemies: "",
+        offenses: "",
+        achievements: "",
+        story: "",
+        message: "To ITMAWD401: ",
+        quote: "\"\""
+    }
+];
+        
+        // Get DOM elements
+        const studentContainer = document.getElementById('studentContainer');
+        const modal = document.getElementById('studentModal');
+        const closeBtn = document.querySelector('.close');
+        const matrixRain = document.getElementById('matrixRain');
+        
+        // Create matrix rain effect
+        function createMatrixRain() {
+            const characters = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+            const fontSize = 14;
+            const columns = Math.floor(window.innerWidth / fontSize);
+            
+            matrixRain.innerHTML = '';
+            matrixRain.style.fontSize = fontSize + 'px';
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.style.position = 'absolute';
+                column.style.top = '-50px';
+                column.style.left = (i * fontSize) + 'px';
+                column.style.width = fontSize + 'px';
+                column.style.color = 'rgba(0, 255, 0, ' + (Math.random() * 0.5 + 0.1) + ')';
+                column.style.textAlign = 'center';
+                column.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
+                column.style.animation = `fall ${Math.random() * 2 + 1}s linear infinite`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                
+                let text = '';
+                const length = Math.floor(Math.random() * 10) + 10;
+                for (let j = 0; j < length; j++) {
+                    text += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                
+                column.textContent = text;
+                matrixRain.appendChild(column);
+            }
+        }
+        
+        // Add keyframes for matrix rain
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(`
+            @keyframes fall {
+                to {
+                    transform: translateY(${window.innerHeight + 50}px);
+                }
+            }
+        `, styleSheet.cssRules.length);
+        
+        // Initialize matrix rain
+        createMatrixRain();
+        window.addEventListener('resize', createMatrixRain);
+        
+        // Display all students
+        students.forEach(student => {
+            const button = document.createElement('button');
+            button.className = 'student-button';
+            button.textContent = student.name;
+            
+            // Add shine effect on hover
+            button.addEventListener('mouseenter', () => {
+                button.style.boxShadow = '0 0 20px var(--primary)';
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.boxShadow = '';
+            });
+            
+            button.addEventListener('click', () => {
+                showStudentInfo(student);
+                // Add modal entrance effect
+                modal.style.animation = 'fadeIn 0.3s ease-out';
+            });
+            
+            studentContainer.appendChild(button);
+        });
+        
+        // Show student info in modal
+        function showStudentInfo(student) {
+            document.getElementById('studentName').textContent = student.name;
+            
+            const statusElement = document.getElementById('studentStatus');
+            statusElement.textContent = student.status;
+            statusElement.className = student.status === 'Alive' ? 'status-alive' : 'status-dead';
+            
+            document.getElementById('studentAge').textContent = student.age;
+            document.getElementById('studentYear').textContent = student.yearEntered;
+            
+            const tierElement = document.getElementById('studentTier');
+            tierElement.textContent = student.classTier;
+            tierElement.className = `tier-${student.classTier}`;
+            
+            document.getElementById('studentCivilStatus').textContent = student.civilStatus;
+            document.getElementById('studentFriends').textContent = student.friends;
+            document.getElementById('studentEnemies').textContent = student.enemies;
+            document.getElementById('studentOffenses').textContent = student.offenses;
+            document.getElementById('studentAchievements').textContent = student.achievements;
+            document.getElementById('studentStory').textContent = student.story;
+            document.getElementById('studentMessage').textContent = student.message;
+            document.getElementById('studentQuote').textContent = student.quote;
+            
+            modal.style.display = 'flex';
+            
+            // Add typing animation to quote
+            const quoteElement = document.getElementById('studentQuote');
+            quoteElement.style.animation = 'none';
+            void quoteElement.offsetWidth; // Trigger reflow
+            quoteElement.style.animation = 'typewriter 4s steps(40) 1s 1 normal both';
+        }
+        
+        // Close modal when clicking X
+        closeBtn.addEventListener('click', () => {
+            modal.style.animation = 'fadeIn 0.3s ease-out reverse';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.animation = 'fadeIn 0.3s ease-out reverse';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Add glitch effect randomly to student buttons
+        setInterval(() => {
+            const buttons = document.querySelectorAll('.student-button');
+            buttons.forEach(button => {
+                if (Math.random() > 0.97) {
+                    button.classList.add('glitch');
+                    setTimeout(() => {
+                        button.classList.remove('glitch');
+                    }, 1000);
+                }
+            });
+            
+            // Randomly pulse the header
+            if (Math.random() > 0.9) {
+                const header = document.querySelector('h1');
+                header.style.animation = 'none';
+                void header.offsetWidth; // Trigger reflow
+                header.style.animation = 'glitch 0.5s linear';
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
